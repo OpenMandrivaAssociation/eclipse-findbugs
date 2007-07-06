@@ -6,14 +6,15 @@
 
 Name:           eclipse-findbugs
 Version:        1.2.1.%{fb_date}
-Release:        %mkrel 1.1.1
+Release:        %mkrel 1.1.2
 Epoch:          0
 Summary:        FindBugs plugin for Eclipse
 License:        LGPL
 Group:          Development/Java
 URL:            http://findbugs.sourceforge.net/
 Source0:        http://heanet.dl.sourceforge.net/sourceforge/findbugs/eclipsePlugin-%{version}-source.zip
-Patch0:         %{name}-jars.patch
+Patch0:         %{name}-build-xml.patch
+Patch1:         %{name}-plugin-xml.patch
 Requires:       eclipse-platform >= 1:%{eclipse_ver}
 Requires:       findbugs = 0:%{fb_ver}
 BuildRequires:  jpackage-utils >= 0:1.5
@@ -43,7 +44,8 @@ possible error prone code constructs.
 %{__perl} -pi -e 's/date\)/"%{fb_date}")/' buildtools/de/tobject/findbugs/tools/PluginInfo.java
 %{__perl} -pi -e 's/\r$//g' RELEASENOTES doc/*.txt
 %{_bindir}/find . -name '*.jar' -o -name '*.zip' -o -name '*.class' | %{_bindir}/xargs -t %{__rm}
-%patch0 -p1 -b .orig
+%patch0 -p1
+%patch1 -p1
 
 %build
 export CLASSPATH=$(%{_bindir}/build-classpath findbugs bcel5.3 dom4j jaxen)
@@ -73,8 +75,8 @@ for jar in \
 %{eclipse_base}/plugins/org.eclipse.core.jobs_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.jdt.launching_%{eclipse_ver}*.*.jar
 do
-  test -f  ${jar} || exit 1
-  export CLASSPATH=$CLASSPATH:${jar}
+    test -f  ${jar} || exit 1
+    export CLASSPATH=$CLASSPATH:${jar}
 done
 
 export CLASSPATH=$CLASSPATH:`pwd`/bin/classes
