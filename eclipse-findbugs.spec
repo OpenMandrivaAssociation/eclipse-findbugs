@@ -6,13 +6,14 @@
 
 Name:           eclipse-findbugs
 Version:        %{fb_ver}.%{fb_date}
-Release:        %mkrel 1.1.4
+Release:        %mkrel 1.1.5
 Epoch:          0
 Summary:        FindBugs Eclipse plugin
 License:        LGPL
 Group:          Development/Java
 URL:            http://findbugs.sourceforge.net/
 Source0:        http://heanet.dl.sourceforge.net/sourceforge/findbugs/eclipsePlugin-%{version}-source.zip
+Source1:        %{name}-feature.xml
 Patch0:         %{name}-build-xml.patch
 Patch1:         %{name}-plugin-xml.patch
 Requires:       eclipse-platform >= 1:%{eclipse_ver}
@@ -89,11 +90,11 @@ export CLASSPATH=$CLASSPATH:`pwd`/bin/classes
 %install
 %{__rm} -rf %{buildroot}
 
-#%{__mkdir_p} %{buildroot}/%{eclipse_base}/features
+%{__mkdir_p} %{buildroot}/%{eclipse_base}/features
+%{__cp} -a %{SOURCE1} %{buildroot}/%{eclipse_base}/features/feature.xml
+
 %{__mkdir_p} %{buildroot}/%{eclipse_base}/plugins
-
 %{__unzip} bin/edu.umd.cs.findbugs.plugin.eclipse_%{version}.zip -d %{buildroot}/%{eclipse_base}/plugins
-
 %{__cp} -a dist/* %{buildroot}/%{eclipse_base}/plugins/edu.umd.cs.findbugs.plugin.eclipse_%{version}
 
 %{_bindir}/build-jar-repository \
@@ -128,7 +129,7 @@ export CLASSPATH=$CLASSPATH:`pwd`/bin/classes
 %files
 %defattr(0644,root,root,0755)
 %doc doc/*.txt
-#%{eclipse_base}/features/*
+%{eclipse_base}/features/*
 %{eclipse_base}/plugins/*
 %if %{gcj_support}
 %dir %{_libdir}/gcj/%{name}
