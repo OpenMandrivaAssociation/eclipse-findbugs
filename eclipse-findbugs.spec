@@ -5,10 +5,10 @@
 %define gcj_support     1
 
 Name:           eclipse-findbugs
-Version:        1.2.1.%{fb_date}
-Release:        %mkrel 1.1.2
+Version:        %{fb_ver}.%{fb_date}
+Release:        %mkrel 1.1.3
 Epoch:          0
-Summary:        FindBugs plugin for Eclipse
+Summary:        FindBugs Eclipse plugin
 License:        LGPL
 Group:          Development/Java
 URL:            http://findbugs.sourceforge.net/
@@ -32,10 +32,7 @@ BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
-The Eclipse FindBugs plugin integrates the FindBugs Java code
-auditor into the Eclipse IDE. The plugin provides real-time feedback
-to the user about violations of rules that check for coding style and
-possible error prone code constructs. 
+The FindBugs Eclipse plugin allows FindBugs to be used within the Eclipse IDE.
 
 %prep
 %setup -q -n eclipsePlugin-%{version}
