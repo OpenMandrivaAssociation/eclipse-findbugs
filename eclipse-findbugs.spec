@@ -1,7 +1,7 @@
 %define eclipse_base    %{_datadir}/eclipse
 %define fb_ver          1.2.1
 %define fb_date         20070531
-%define eclipse_ver     3.2
+%define eclipse_ver     3.3
 %define gcj_support     1
 
 Name:           eclipse-findbugs
@@ -61,7 +61,6 @@ for jar in \
 %{eclipse_base}/plugins/org.eclipse.osgi_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.swt_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.team.core_%{eclipse_ver}*.*.jar \
-%{eclipse_base}/plugins/org.eclipse.team.cvs.core_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.text_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.ui_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.ui.editors_%{eclipse_ver}*.*.jar \
@@ -78,6 +77,7 @@ do
 done
 
 export CLASSPATH=$CLASSPATH:`pwd`/bin/classes
+export OPT_JAR_LIST=:
 
 %{ant} -Dbuild.sysclasspath=only \
     -Dfindbugs.dir=%{_javadir}/findbugs \
