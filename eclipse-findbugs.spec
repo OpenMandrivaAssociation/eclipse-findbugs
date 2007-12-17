@@ -28,7 +28,6 @@ BuildRequires:  java-gcj-compat-devel
 BuildRequires:  java-devel
 BuildArch:      noarch
 %endif
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 The FindBugs Eclipse plugin allows FindBugs to be used within the Eclipse IDE.
