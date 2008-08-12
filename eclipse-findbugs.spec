@@ -1,12 +1,12 @@
-%define eclipse_base    %{_datadir}/eclipse
+%define eclipse_base    %{_libdir}/eclipse
 %define fb_ver          1.2.1
 %define fb_date         20070531
-%define eclipse_ver     3.3
+%define eclipse_ver     3.4
 %define gcj_support     1
 
 Name:           eclipse-findbugs
 Version:        %{fb_ver}.%{fb_date}
-Release:        %mkrel 1.1.8
+Release:        %mkrel 1.1.9
 Epoch:          0
 Summary:        FindBugs Eclipse plugin
 License:        LGPL
@@ -47,13 +47,13 @@ The FindBugs Eclipse plugin allows FindBugs to be used within the Eclipse IDE.
 export CLASSPATH=$(%{_bindir}/build-classpath findbugs bcel5.3 dom4j jaxen)
 
 for jar in \
-%{_jnidir}/swt-gtk-%{eclipse_ver}*.jar \
+%{_libdir}/java/swt.jar \
 %{eclipse_base}/plugins/org.eclipse.core.commands_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.core.filebuffers_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.core.resources_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.core.runtime_%{eclipse_ver}*.*.jar \
-%{eclipse_base}/plugins/org.eclipse.jdt.core_%{eclipse_ver}*.*.jar \
-%{eclipse_base}/plugins/org.eclipse.jdt.ui_%{eclipse_ver}*.*.jar \
+%{eclipse_base}/dropins/jdt/plugins/org.eclipse.jdt.core_%{eclipse_ver}*.*.jar \
+%{eclipse_base}/dropins/jdt/plugins/org.eclipse.jdt.ui_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.jface_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.jface.text_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.osgi_%{eclipse_ver}*.*.jar \
@@ -68,7 +68,7 @@ for jar in \
 %{eclipse_base}/plugins/org.eclipse.equinox.common_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.equinox.registry_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.core.jobs_%{eclipse_ver}*.*.jar \
-%{eclipse_base}/plugins/org.eclipse.jdt.launching_%{eclipse_ver}*.*.jar
+%{eclipse_base}/dropins/jdt/plugins/org.eclipse.jdt.launching_%{eclipse_ver}*.*.jar
 do
     test -f  ${jar} || exit 1
     export CLASSPATH=$CLASSPATH:${jar}
@@ -109,9 +109,7 @@ export OPT_JAR_LIST=:
     %{buildroot}/%{eclipse_base}/plugins/edu.umd.cs.findbugs.plugin.eclipse_%{version}/plugin \
     findbugs/plugin/coreplugin
 
-%if %{gcj_support}
-%{_bindir}/aot-compile-rpm
-%endif
+%{gcj_compile}
 
 %clean 
 %{__rm} -rf %{buildroot}
@@ -129,7 +127,4 @@ export OPT_JAR_LIST=:
 %doc doc/*.txt
 %{eclipse_base}/features/*
 %{eclipse_base}/plugins/*
-%if %{gcj_support}
-%dir %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/*
-%endif
+%{gcj_files}
