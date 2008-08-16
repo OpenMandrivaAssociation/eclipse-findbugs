@@ -6,7 +6,7 @@
 
 Name:           eclipse-findbugs
 Version:        %{fb_ver}.%{fb_date}
-Release:        %mkrel 1.1.9
+Release:        %mkrel 1.1.10
 Epoch:          0
 Summary:        FindBugs Eclipse plugin
 License:        LGPL
@@ -26,7 +26,7 @@ BuildRequires:  findbugs = 0:%{fb_ver}
 BuildRequires:  java-gcj-compat-devel
 %else
 BuildRequires:  java-devel
-BuildArch:      noarch
+#BuildArch:      noarch
 %endif
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
