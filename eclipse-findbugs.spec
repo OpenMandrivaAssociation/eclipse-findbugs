@@ -1,8 +1,8 @@
 %define eclipse_base    %{_libdir}/eclipse
-%define fb_ver          1.2.1
-%define fb_date         20070531
+%define fb_ver          1.3.4
+%define fb_date         20080506
 %define eclipse_ver     3.4
-%define gcj_support     1
+%define gcj_support     0
 
 Name:           eclipse-findbugs
 Version:        %{fb_ver}.%{fb_date}
@@ -41,13 +41,17 @@ The FindBugs Eclipse plugin allows FindBugs to be used within the Eclipse IDE.
 %{__perl} -pi -e 's/\r$//g' RELEASENOTES doc/*.txt
 %{_bindir}/find . -name '*.jar' -o -name '*.zip' -o -name '*.class' | %{_bindir}/xargs -t %{__rm}
 %patch0 -p1
-%patch1 -p1
+#patch1 -p1
 
 %build
 export CLASSPATH=$(%{_bindir}/build-classpath findbugs bcel5.3 dom4j jaxen)
 
 for jar in \
 %{_libdir}/java/swt.jar \
+%{eclipse_base}/plugins/org.eclipse.ant.core*.jar \
+%{eclipse_base}/plugins/org.eclipse.ui.navigator*.jar \
+%{eclipse_base}/plugins/org.eclipse.team.ui*.jar \
+%{eclipse_base}/plugins/org.eclipse.compare*.jar \
 %{eclipse_base}/plugins/org.eclipse.core.commands_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.core.filebuffers_%{eclipse_ver}*.*.jar \
 %{eclipse_base}/plugins/org.eclipse.core.resources_%{eclipse_ver}*.*.jar \
@@ -74,7 +78,7 @@ do
     export CLASSPATH=$CLASSPATH:${jar}
 done
 
-export CLASSPATH=$CLASSPATH:`pwd`/bin/classes
+export CLASSPATH=$CLASSPATH:`pwd`/bin_build
 export OPT_JAR_LIST=:
 
 %{ant} -Dbuild.sysclasspath=only \
@@ -92,7 +96,7 @@ export OPT_JAR_LIST=:
 %{__cp} -a %{SOURCE1} %{buildroot}/%{eclipse_base}/features/feature.xml
 
 %{__mkdir_p} %{buildroot}/%{eclipse_base}/plugins
-%{__unzip} bin/edu.umd.cs.findbugs.plugin.eclipse_%{version}.zip -d %{buildroot}/%{eclipse_base}/plugins
+%{__unzip} bin_build/edu.umd.cs.findbugs.plugin.eclipse_%{version}.zip -d %{buildroot}/%{eclipse_base}/plugins
 %{__cp} -a dist/* %{buildroot}/%{eclipse_base}/plugins/edu.umd.cs.findbugs.plugin.eclipse_%{version}
 
 %{_bindir}/build-jar-repository \
