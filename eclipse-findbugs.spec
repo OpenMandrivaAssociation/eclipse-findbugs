@@ -6,7 +6,7 @@
 
 Name:           eclipse-findbugs
 Version:        %{fb_ver}.%{fb_date}
-Release:        %mkrel 1.1.11
+Release:        %mkrel 1.1.12
 Epoch:          0
 Summary:        FindBugs Eclipse plugin
 License:        LGPL
@@ -47,7 +47,7 @@ The FindBugs Eclipse plugin allows FindBugs to be used within the Eclipse IDE.
 export CLASSPATH=$(%{_bindir}/build-classpath findbugs bcel5.3 dom4j jaxen)
 
 for jar in \
-%{_libdir}/java/swt.jar \
+/usr/lib/java/swt.jar \
 %{eclipse_base}/plugins/org.eclipse.ant.core*.jar \
 %{eclipse_base}/plugins/org.eclipse.ui.navigator*.jar \
 %{eclipse_base}/plugins/org.eclipse.team.ui*.jar \
