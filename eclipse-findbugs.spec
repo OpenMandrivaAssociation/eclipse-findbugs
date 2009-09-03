@@ -6,7 +6,7 @@
 
 Name:           eclipse-findbugs
 Version:        %{fb_ver}.%{fb_date}
-Release:        %mkrel 1.1.10
+Release:        %mkrel 1.1.11
 Epoch:          0
 Summary:        FindBugs Eclipse plugin
 License:        LGPL
