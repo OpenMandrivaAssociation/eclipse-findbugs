@@ -3,7 +3,7 @@
 
 Name:           eclipse-findbugs
 Version:        1.3.9
-Release:        3
+Release:        5
 Summary:        Eclipse plugin for FindBugs
 
 Group:          Development/Java
