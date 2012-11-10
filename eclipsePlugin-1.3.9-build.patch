@@ -1,0 +1,141 @@
+diff -dur eclipsePlugin-1.3.9.20090821.ORIG/build.properties eclipsePlugin-1.3.9.20090821/build.properties
+--- eclipsePlugin-1.3.9.20090821.ORIG/build.properties	2009-03-15 06:19:04.000000000 -0600
++++ eclipsePlugin-1.3.9.20090821/build.properties	2009-08-25 12:01:47.757982754 -0600
+@@ -17,16 +17,16 @@
+                META-INF/,\
+                surelogic.png,\
+                umdFindbugs.png,\
+-               lib/annotations.jar,\
+-               lib/asm-3.1.jar,\
+-               lib/asm-commons-3.1.jar,\
+-               lib/asm-tree-3.1.jar,\
+-               lib/bcel.jar,\
+-               lib/commons-lang-2.4.jar,\
+-               lib/dom4j-1.6.1.jar,\
+-               lib/jFormatString.jar,\
+-               lib/jaxen-1.1.1.jar,\
+-               lib/jsr305.jar
++               /usr/share/java/findbugs-annotations.jar,\
++               /usr/share/java/objectweb-asm/asm-3.1.jar,\
++               /usr/share/java/objectweb-asm/asm-commons-3.1.jar,\
++               /usr/share/java/objectweb-asm/asm-tree-3.1.jar,\
++               /usr/share/java/findbugs-bcel.jar,\
++               /usr/share/java/commons-lang.jar,\
++               /usr/share/java/dom4j-1.6.1.jar,\
++               /usr/share/java/jFormatString.jar,\
++               /usr/share/java/jaxen-1.1.1.jar,\
++               /usr/share/java/jsr-305.jar
+ src.includes = .classpath,\
+ 			   .project,\
+ 			   .settings/,\
+diff -dur eclipsePlugin-1.3.9.20090821.ORIG/build.xml eclipsePlugin-1.3.9.20090821/build.xml
+--- eclipsePlugin-1.3.9.20090821.ORIG/build.xml	2009-04-01 15:58:08.000000000 -0600
++++ eclipsePlugin-1.3.9.20090821/build.xml	2009-08-25 12:06:18.477984581 -0600
+@@ -55,14 +55,14 @@
+     <property name="lib.dir" value="lib"/>
+ 
+     <!-- list of required libraries, copied from FB core project -->
+-	<property name="jars.required" value="jsr305.jar,
+-		bcel.jar,
+-		annotations.jar,
++	<property name="jars.required" value="jsr-305.jar,
++		findbugs-bcel.jar,
++		findbugs-annotations.jar,
+ 		jFormatString.jar,
+-		commons-lang-2.4.jar,
+-		asm-3.1.jar,
+-		asm-tree-3.1.jar,
+-		asm-commons-3.1.jar,
++		commons-lang.jar,
++		objectweb-asm/asm-3.1.jar,
++		objectweb-asm/asm-tree-3.1.jar,
++		objectweb-asm/asm-commons-3.1.jar,
+ 		dom4j-1.6.1.jar,
+ 		jaxen-1.1.1.jar" />
+ 
+@@ -72,11 +72,18 @@
+ 		findbugs-ant.jar" />
+ 
+ 	<path id="plugin.classpath">
+-		<fileset dir="${lib.dir}" includes="${jars.required}"/>
++		<fileset dir="/usr/share/java" includes="${jars.required}"/>
+ 		<fileset dir="${eclipsePlugin.dir}">
+ 			<include name="**/*.jar"/>
+ 			<exclude name="edu.umd.cs.findbugs.**/*.jar"/>
+ 		</fileset>
++		<fileset dir="${eclipseJdtPlugin.dir}">
++			<include name="**/*.jar"/>
++		</fileset>
++		<fileset dir="${eclipseSdkPlugin.dir}">
++			<include name="**/*.jar"/>
++		</fileset>
++		<fileset file="@SWT_JAR@"/>
+ 	</path>
+ 
+ 	<!-- Need these jars for ant target 'srcdist', which uses subversion.  Grab them at:
+@@ -110,7 +117,7 @@
+         </delete>
+ 	</target>
+ 
+-	<target name="classes" depends="init,fbjars" description="Compile java source files">
++	<target name="classes" depends="init" description="Compile java source files">
+ 		<echo message="Compiling FindBugs Eclipse plugin"/>
+ 	    <fail unless="eclipsePlugin.dir"
+ 	    	message="Please specify path to the Eclipse 3.3+ plugins folder in local.properties file, like: eclipsePlugin.dir=F:\\java\\eclipse33\\plugins"/>
+@@ -131,13 +138,13 @@
+ 		</copy>
+ 	</target>
+ 
+-	<target name="version" depends="fbjars" description="Extract the plugin id and version">
++	<target name="version" description="Extract the plugin id and version">
+ 		<echo message="Verifying and creating FindBugs Eclipse plugin version info"/>
+ 
+-		<!-- 1) read FB version from ${bin.dir}/version.properties (copied from core) to ${release.base} -->
++		<!-- 1) read FB version from ${bin.dir}/version.properties (copied from core) to ${release.base}
+ 	    <loadproperties srcFile="${bin.dir}/version.properties" >
+ 	      <filterchain><linecontains><contains value="release.base"/></linecontains></filterchain>
+-	    </loadproperties>
++	    </loadproperties> -->
+ 
+ 		<!-- 2) read plugin base version from META-INF/MANIFEST.MF to ${eclipse.release.base} -->
+ 		<loadfile srcFile="META-INF/MANIFEST.MF" property="eclipse.release.base">
+@@ -178,7 +185,7 @@
+ 	<target name="dist" depends="clean,classes,version"
+ 		description="Build a plugin distributable">
+ 		<echo message="Creating FindBugs Eclipse plugin binary distribution"/>
+-		<jar destfile="${dist.dir}/findbugs-plugin.jar" >
++		<jar destfile="${dist.dir}/findbugs-plugin.jar" manifest="${dist.dir}/META-INF/MANIFEST.MF">
+ 			<fileset dir="${bin.dir}" excludes="de/tobject/findbugs/tools/**" />
+ 		</jar>
+ 		<copy todir="${dist.dir}" >
+diff -dur eclipsePlugin-1.3.9.20090821.ORIG/META-INF/MANIFEST.MF eclipsePlugin-1.3.9.20090821/META-INF/MANIFEST.MF
+--- eclipsePlugin-1.3.9.20090821.ORIG/META-INF/MANIFEST.MF	2009-04-01 15:58:08.000000000 -0600
++++ eclipsePlugin-1.3.9.20090821/META-INF/MANIFEST.MF	2009-08-25 12:07:46.420996289 -0600
+@@ -4,16 +4,17 @@
+ Bundle-SymbolicName: edu.umd.cs.findbugs.plugin.eclipse; singleton:=true
+ Bundle-Version: 1.3.9.qualifier
+ Bundle-ClassPath: findbugs-plugin.jar,
+- lib/jsr305.jar,
+- lib/annotations.jar,
+- lib/bcel.jar,
+- lib/dom4j-1.6.1.jar,
+- lib/jaxen-1.1.1.jar,
+- lib/jFormatString.jar,
+- lib/asm-tree-3.1.jar,
+- lib/asm-3.1.jar,
+- lib/asm-commons-3.1.jar,
+- lib/commons-lang-2.4.jar
++ jsr-305.jar,
++ findbugs-annotations.jar,
++ findbugs-bcel.jar,
++ findbugs.jar,
++ dom4j.jar,
++ jaxen.jar,
++ jFormatString.jar,
++ asm-tree.jar,
++ asm.jar,
++ asm-commons.jar,
++ commons-lang.jar
+ Bundle-Activator: de.tobject.findbugs.FindbugsPlugin
+ Bundle-Vendor: FindBugs Project
+ Bundle-Localization: plugin
