@@ -8,7 +8,7 @@ Summary:        Eclipse plugin for FindBugs
 
 Group:          Development/Java
 License:        LGPLv2+
-URL:            http://findbugs.sourceforge.net/
+URL:            https://findbugs.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/findbugs/eclipsePlugin-%{version}.%{pkg_date}-source.zip
 # This patch is Fedora-specific, so it has not been submitted upstream.  The
 # patch makes the build infrastructure use installed JARs for the build, rather
